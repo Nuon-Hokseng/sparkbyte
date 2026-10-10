@@ -1,0 +1,1189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SparkByte landing mock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..700&family=Instrument+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --ink: #050506;
+        --graphite: #14161a;
+        --line-d: #262a31;
+        --silver: #9aa0aa;
+        --mist: #d9dce1;
+        --paper: #eceef1;
+        --paper-ink: #0b0c0e;
+        --line-l: #cfd3d9;
+        --muted-l: #5a606a;
+        --ok: #2fbf84;
+        --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+        --body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+        --pad: 96px;
+        --chamfer: 120px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        background: #ff00ff;
+      }
+      body {
+        background: var(--ink);
+        color: #fff;
+        font-family: var(--body);
+        font-size: 18px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        font-weight: 300;
+        letter-spacing: -0.035em;
+        line-height: 1;
+      }
+      .wrap {
+        padding-left: var(--pad);
+        padding-right: var(--pad);
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+
+      /* nav */
+      .nav {
+        position: absolute;
+        z-index: 5;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 96px;
+      }
+      .nav .wrap {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: var(--display);
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      .brand img {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid #2a2e35;
+      }
+      .links {
+        display: flex;
+        gap: 40px;
+        font-size: 16px;
+        color: var(--mist);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 52px;
+        padding: 0 28px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 16px;
+        background: #fff;
+        color: var(--ink);
+      }
+      .btn.sm {
+        height: 42px;
+        padding: 0 20px;
+        font-size: 15px;
+      }
+      .textlink {
+        font-weight: 500;
+        font-size: 16px;
+        color: #fff;
+        border-bottom: 1px solid #6b717b;
+        padding-bottom: 3px;
+      }
+
+      /* hero */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 900px;
+        background: var(--ink);
+      }
+      .hero-art {
+        position: absolute;
+        right: -140px;
+        top: -30px;
+        width: 1000px;
+        height: 1000px;
+        object-fit: cover;
+      }
+      .hero:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            90deg,
+            var(--ink) 0,
+            var(--ink) 44%,
+            rgba(5, 5, 6, 0) 70%
+          ),
+          linear-gradient(0deg, var(--ink) 0, rgba(5, 5, 6, 0) 22%);
+      }
+      .hero .wrap {
+        position: relative;
+        z-index: 2;
+        padding-top: 230px;
+      }
+      .hero h1 {
+        font-size: 108px;
+        max-width: 820px;
+        font-weight: 300;
+      }
+      .hero p.sub {
+        margin-top: 36px;
+        max-width: 500px;
+        font-size: 20px;
+        color: var(--mist);
+      }
+      .hero .cta {
+        margin-top: 44px;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .facts {
+        position: absolute;
+        z-index: 3;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .facts .wrap {
+        padding-top: 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid var(--line-d);
+        padding-bottom: 0;
+      }
+      .fact {
+        padding: 28px 28px 40px 0;
+        font-size: 16px;
+        color: var(--silver);
+        line-height: 1.5;
+      }
+      .fact b {
+        display: block;
+        color: #fff;
+        font-weight: 500;
+        font-size: 19px;
+        margin-bottom: 4px;
+      }
+      .fact + .fact {
+        padding-left: 28px;
+        border-left: 1px solid var(--line-d);
+      }
+
+      /* sections */
+      .paper {
+        background: var(--paper);
+        color: var(--paper-ink);
+      }
+      .chamfer-tr {
+        clip-path: polygon(
+          0 0,
+          calc(100% - var(--chamfer)) 0,
+          100% var(--chamfer),
+          100% 100%,
+          0 100%
+        );
+      }
+      .chamfer-tl {
+        clip-path: polygon(
+          var(--chamfer) 0,
+          100% 0,
+          100% 100%,
+          0 100%,
+          0 var(--chamfer)
+        );
+      }
+      section.s {
+        padding: 150px 0;
+      }
+      h2 {
+        font-size: 68px;
+        font-weight: 350;
+      }
+      .lead {
+        margin-top: 28px;
+        max-width: 520px;
+        color: var(--muted-l);
+      }
+      .dark-sec .lead {
+        color: var(--silver);
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 5fr 7fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .feat {
+        margin-top: 56px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 40px;
+      }
+      .feat div {
+        border-top: 1px solid var(--line-l);
+        padding: 20px 0 28px;
+        font-size: 16px;
+        color: var(--muted-l);
+        line-height: 1.5;
+      }
+      .feat b {
+        display: block;
+        font-size: 18px;
+        color: var(--paper-ink);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .dark-sec .feat div {
+        border-top-color: var(--line-d);
+        color: var(--silver);
+      }
+      .dark-sec .feat b {
+        color: #fff;
+      }
+
+      .fitbox {
+        width: 100%;
+        position: relative;
+      }
+      .fit {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: top left;
+      }
+
+      /* tablet */
+      .tablet {
+        width: 820px;
+        height: 560px;
+        background: #0b0c0e;
+        border-radius: 34px;
+        padding: 16px;
+        box-shadow:
+          0 60px 90px -40px rgba(0, 0, 0, 0.45),
+          0 0 0 1px #2c3036 inset;
+      }
+      .tscreen {
+        width: 100%;
+        height: 100%;
+        background: #f6f7f9;
+        border-radius: 20px;
+        display: grid;
+        grid-template-columns: 1fr 290px;
+        overflow: hidden;
+        color: #0b0c0e;
+        font-size: 14px;
+        line-height: 1.35;
+      }
+      .tl {
+        padding: 22px 22px;
+      }
+      .ttop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .ttop b {
+        font-family: var(--display);
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      .dot {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: #4b515a;
+      }
+      .dot i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ok);
+        display: block;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+      .tab {
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid #d6d9de;
+        font-size: 13px;
+        color: #4b515a;
+        background: #fff;
+      }
+      .tab.on {
+        background: #0b0c0e;
+        color: #fff;
+        border-color: #0b0c0e;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .tile {
+        background: #fff;
+        border: 1px solid #e0e3e7;
+        border-radius: 14px;
+        padding: 14px;
+        height: 112px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .tile .sw {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: #e7e9ed;
+      }
+      .tile b {
+        font-weight: 600;
+        font-size: 14px;
+        display: block;
+      }
+      .tile span {
+        font-size: 13px;
+        color: #5a606a;
+      }
+      .tile.sel {
+        border-color: #0b0c0e;
+        box-shadow: 0 0 0 1px #0b0c0e;
+      }
+      .tr {
+        background: #fff;
+        border-left: 1px solid #e0e3e7;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+      }
+      .tr h4 {
+        font-family: var(--display);
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+        margin-bottom: 2px;
+      }
+      .tr small {
+        color: #6a707a;
+        font-size: 12px;
+      }
+      .lines {
+        margin-top: 18px;
+        flex: 1;
+      }
+      .ln {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #eceef1;
+        font-size: 14px;
+      }
+      .sum {
+        font-size: 13px;
+        color: #5a606a;
+      }
+      .sum div {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+      }
+      .sum .tot {
+        color: #0b0c0e;
+        font-weight: 600;
+        font-size: 17px;
+        padding-top: 10px;
+      }
+      .charge {
+        margin-top: 14px;
+        height: 50px;
+        border-radius: 14px;
+        background: #0b0c0e;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      /* phones */
+      .phone {
+        position: absolute;
+        width: 290px;
+        height: 600px;
+        background: #0b0c0e;
+        border-radius: 44px;
+        padding: 11px;
+        box-shadow: 0 0 0 1px #343941 inset;
+      }
+      .pscreen {
+        width: 100%;
+        height: 100%;
+        background: #f6f7f9;
+        border-radius: 34px;
+        overflow: hidden;
+        color: #0b0c0e;
+        padding: 16px 18px;
+        font-size: 13px;
+        line-height: 1.35;
+        position: relative;
+      }
+      .pstat {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 22px;
+        padding: 0 6px;
+      }
+      .island {
+        position: absolute;
+        left: 50%;
+        top: 10px;
+        width: 84px;
+        height: 24px;
+        border-radius: 14px;
+        background: #0b0c0e;
+        transform: translateX(-50%);
+      }
+      .pscreen h5 {
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: 30px;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+      }
+      .muted {
+        color: #6a707a;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #e0e3e7;
+        border-radius: 18px;
+        padding: 16px;
+        margin-top: 16px;
+      }
+      .steps {
+        display: flex;
+        gap: 6px;
+        margin: 14px 0 8px;
+      }
+      .steps i {
+        flex: 1;
+        height: 5px;
+        border-radius: 3px;
+        background: #e0e3e7;
+      }
+      .steps i.on {
+        background: #0b0c0e;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 9px 0;
+        border-bottom: 1px solid #eceef1;
+      }
+      .row:last-child {
+        border: 0;
+      }
+      .pbtn {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 20px;
+        height: 48px;
+        border-radius: 14px;
+        background: #0b0c0e;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+      .chips {
+        display: flex;
+        gap: 6px;
+        margin: 14px 0 6px;
+      }
+      .chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid #d6d9de;
+        font-size: 12px;
+        background: #fff;
+      }
+      .chip.on {
+        background: #0b0c0e;
+        color: #fff;
+        border-color: #0b0c0e;
+      }
+      .mi {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 11px 0;
+        border-bottom: 1px solid #eceef1;
+      }
+      .mi .sw {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #e7e9ed;
+        flex: none;
+      }
+      .mi div {
+        flex: 1;
+      }
+      .mi b {
+        display: block;
+        font-weight: 600;
+      }
+      .mi .add {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #0b0c0e;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        flex: none;
+      }
+
+      /* process */
+      .steps4 {
+        margin-top: 72px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+      .st {
+        border-top: 1px solid #b9bec6;
+        padding: 24px 28px 0 0;
+      }
+      .st + .st {
+        padding-left: 28px;
+        border-left: 1px solid #cfd3d9;
+      }
+      .st .n {
+        font-family: var(--display);
+        font-weight: 200;
+        font-size: 72px;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--paper-ink);
+      }
+      .st h3 {
+        margin-top: 28px;
+        font-size: 26px;
+        font-weight: 450;
+        letter-spacing: -0.02em;
+      }
+      .st p {
+        margin-top: 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--muted-l);
+      }
+
+      /* cta */
+      .ctasec {
+        position: relative;
+        overflow: hidden;
+        padding: 190px 0 170px;
+      }
+      .ctasec .spark {
+        position: absolute;
+        left: 76%;
+        top: 50%;
+        width: 1900px;
+        height: 2px;
+        margin-left: -950px;
+        transform: rotate(-45deg);
+        background: linear-gradient(
+          90deg,
+          transparent 0,
+          rgba(255, 255, 255, 0) 30%,
+          #fff 50%,
+          rgba(255, 255, 255, 0) 70%,
+          transparent 100%
+        );
+        opacity: 0.5;
+      }
+      .ctasec .glow {
+        position: absolute;
+        left: 76%;
+        top: 50%;
+        width: 700px;
+        height: 700px;
+        margin: -350px 0 0 -350px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.14),
+          rgba(255, 255, 255, 0) 62%
+        );
+      }
+      .ctasec .wrap {
+        position: relative;
+        z-index: 2;
+      }
+      .ctasec h2 {
+        font-size: 96px;
+        max-width: 900px;
+        font-weight: 300;
+      }
+      .ctasec p {
+        margin-top: 28px;
+        color: var(--silver);
+        max-width: 480px;
+      }
+      .form {
+        margin-top: 44px;
+        display: flex;
+        gap: 12px;
+        max-width: 620px;
+      }
+      .input {
+        flex: 1;
+        height: 56px;
+        border-radius: 999px;
+        border: 1px solid #3a3f47;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        color: #7d838d;
+        font-size: 16px;
+      }
+      .form .btn {
+        height: 56px;
+      }
+
+      footer {
+        border-top: 1px solid var(--line-d);
+        padding: 48px 0 56px;
+        color: var(--silver);
+        font-size: 15px;
+      }
+      footer .wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      footer .brand {
+        font-size: 20px;
+        color: #fff;
+      }
+      footer .brand img {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+      footer .fl {
+        display: flex;
+        gap: 32px;
+      }
+
+      /* mobile */
+      @media (max-width: 760px) {
+        :root {
+          --pad: 24px;
+          --chamfer: 56px;
+        }
+        body {
+          font-size: 17px;
+        }
+        .nav {
+          height: 76px;
+        }
+        .links {
+          display: none;
+        }
+        .brand {
+          font-size: 21px;
+        }
+        .brand img {
+          width: 34px;
+          height: 34px;
+        }
+        .hero {
+          min-height: 0;
+          padding-bottom: 0;
+        }
+        .hero .wrap {
+          padding-top: 0;
+          padding-bottom: 44px;
+        }
+        .hero .facts .wrap {
+          padding-top: 0;
+        }
+        .hero h1 {
+          font-size: 60px;
+        }
+        .hero p.sub {
+          font-size: 18px;
+          margin-top: 24px;
+        }
+        .hero .cta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 24px;
+          margin-top: 32px;
+        }
+        .hero-art {
+          position: relative;
+          display: block;
+          right: auto;
+          top: auto;
+          width: 150%;
+          height: auto;
+          max-width: none;
+          margin: 30px 0 -165px -25%;
+          aspect-ratio: 1/1;
+        }
+        .hero:after {
+          background: linear-gradient(
+            180deg,
+            var(--ink) 0,
+            rgba(5, 5, 6, 0) 18%,
+            rgba(5, 5, 6, 0) 70%,
+            var(--ink) 100%
+          );
+        }
+        .facts {
+          position: relative;
+          margin-top: 0;
+        }
+        .facts .wrap {
+          grid-template-columns: 1fr;
+        }
+        .fact {
+          padding: 20px 0;
+        }
+        .fact + .fact {
+          padding-left: 0;
+          border-left: 0;
+          border-top: 1px solid var(--line-d);
+        }
+        section.s {
+          padding: 84px 0;
+        }
+        h2 {
+          font-size: 44px;
+        }
+        .split,
+        .split[style] {
+          grid-template-columns: 1fr !important;
+          gap: 48px;
+        }
+        .feat {
+          grid-template-columns: 1fr;
+          margin-top: 36px;
+        }
+        .steps4 {
+          grid-template-columns: 1fr;
+          margin-top: 44px;
+        }
+        .st {
+          padding: 22px 0 30px;
+        }
+        .st + .st {
+          padding-left: 0;
+          border-left: 0;
+        }
+        .st .n {
+          font-size: 56px;
+        }
+        .ctasec {
+          padding: 110px 0 100px;
+        }
+        .ctasec h2 {
+          font-size: 54px;
+        }
+        .ctasec .glow {
+          left: 70%;
+          top: 30%;
+        }
+        .ctasec .spark {
+          opacity: 0.22;
+          left: 70%;
+        }
+        .form {
+          flex-direction: column;
+        }
+        footer .wrap {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 28px;
+        }
+        footer .fl {
+          flex-wrap: wrap;
+          gap: 20px 28px;
+        }
+        .order-m1 {
+          order: 1;
+        }
+        .order-m2 {
+          order: 2;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap">
+        <a class="brand" href="#"
+          ><img src="../app/icon.png" alt="" />SparkByte</a
+        >
+        <nav class="links">
+          <a href="#pos">POS systems</a><a href="#apps">Mobile apps</a
+          ><a href="#process">How we work</a><a href="#contact">Contact</a>
+        </nav>
+        <a class="btn sm" href="#contact">Book a demo</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <img class="hero-art" src="logo-source.png" alt="" />
+      <div class="wrap">
+        <h1>The till and the app, built together.</h1>
+        <p class="sub">
+          SparkByte builds point-of-sale systems and mobile apps for shops,
+          cafés and restaurants. One team, from the checkout counter to your
+          customer's phone.
+        </p>
+        <div class="cta">
+          <a class="btn" href="#contact">Book a demo</a
+          ><a class="textlink" href="#pos">See what we build</a>
+        </div>
+      </div>
+      <div class="facts">
+        <div class="wrap">
+          <div class="fact">
+            <b>Point-of-sale systems</b>Checkout, stock and reports in one
+            place.
+          </div>
+          <div class="fact">
+            <b>Mobile apps</b>For iOS and Android, under your brand.
+          </div>
+          <div class="fact">
+            <b>Setup and support</b>We install, train your staff and stay on
+            call.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s paper chamfer-tr" id="pos">
+      <div class="wrap split">
+        <div>
+          <h2>A POS that keeps up with the rush.</h2>
+          <p class="lead">
+            Ring up orders in a few taps, see what's left on the shelf, and
+            close the day with numbers that match the cash drawer.
+          </p>
+          <div class="feat">
+            <div>
+              <b>Fast checkout</b>Split bills, apply discounts, print or send
+              receipts.
+            </div>
+            <div>
+              <b>Stock tracking</b>Know what's running low before it runs out.
+            </div>
+            <div>
+              <b>Sales reports</b>Daily and weekly totals by item, shift and
+              staff member.
+            </div>
+            <div>
+              <b>Staff accounts</b>Give each person the access their role needs.
+            </div>
+          </div>
+        </div>
+        <div class="fitbox">
+          <div class="fit" data-w="820" data-h="580">
+            <div class="tablet">
+              <div class="tscreen">
+                <div class="tl">
+                  <div class="ttop">
+                    <b>Counter 1</b><span class="dot"><i></i>Connected</span>
+                  </div>
+                  <div class="tabs">
+                    <span class="tab on">Coffee</span
+                    ><span class="tab">Tea</span><span class="tab">Pastry</span
+                    ><span class="tab">Lunch</span>
+                  </div>
+                  <div class="grid">
+                    <div class="tile sel">
+                      <span class="sw"></span>
+                      <div><b>Iced latte</b><span>$3.50</span></div>
+                    </div>
+                    <div class="tile">
+                      <span class="sw"></span>
+                      <div><b>Flat white</b><span>$3.20</span></div>
+                    </div>
+                    <div class="tile sel">
+                      <span class="sw"></span>
+                      <div><b>Cold brew</b><span>$3.80</span></div>
+                    </div>
+                    <div class="tile sel">
+                      <span class="sw"></span>
+                      <div><b>Croissant</b><span>$2.60</span></div>
+                    </div>
+                    <div class="tile">
+                      <span class="sw"></span>
+                      <div><b>Matcha latte</b><span>$4.20</span></div>
+                    </div>
+                    <div class="tile">
+                      <span class="sw"></span>
+                      <div><b>Banana bread</b><span>$2.40</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tr">
+                  <h4>Order 0148</h4>
+                  <small>Dine in, table 4</small>
+                  <div class="lines">
+                    <div class="ln">
+                      <span>1 Iced latte</span><span>$3.50</span>
+                    </div>
+                    <div class="ln">
+                      <span>2 Croissant</span><span>$5.20</span>
+                    </div>
+                    <div class="ln">
+                      <span>1 Cold brew</span><span>$3.80</span>
+                    </div>
+                  </div>
+                  <div class="sum">
+                    <div><span>Subtotal</span><span>$12.50</span></div>
+                    <div><span>Tax</span><span>$1.00</span></div>
+                    <div class="tot"><span>Total</span><span>$13.50</span></div>
+                  </div>
+                  <div class="charge">Charge $13.50</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s dark-sec" id="apps" style="background: var(--ink)">
+      <div class="wrap split" style="grid-template-columns: 7fr 5fr">
+        <div class="fitbox order-m2">
+          <div class="fit" data-w="560" data-h="700">
+            <div class="phone" style="left: 0; top: 0">
+              <div class="pscreen">
+                <span class="island"></span>
+                <div class="pstat"><span>9:41</span><span>5G</span></div>
+                <p class="muted" style="font-size: 12px">Order 0148</p>
+                <h5 style="margin-top: 6px">Ready for pickup</h5>
+                <div class="steps">
+                  <i class="on"></i><i class="on"></i><i class="on"></i>
+                </div>
+                <p class="muted" style="font-size: 12px">
+                  Placed 9:32, ready 9:41
+                </p>
+                <div class="card">
+                  <div class="row">
+                    <span>1 Iced latte</span><span>$3.50</span>
+                  </div>
+                  <div class="row">
+                    <span>2 Croissant</span><span>$5.20</span>
+                  </div>
+                  <div class="row">
+                    <span>1 Cold brew</span><span>$3.80</span>
+                  </div>
+                </div>
+                <div
+                  class="card"
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  ">
+                  <span>Pickup at counter</span><b>Code 48</b>
+                </div>
+                <div class="pbtn">Show pickup code</div>
+              </div>
+            </div>
+            <div class="phone" style="left: 262px; top: 84px">
+              <div class="pscreen">
+                <span class="island"></span>
+                <div class="pstat"><span>9:41</span><span>5G</span></div>
+                <h5>Corner Café</h5>
+                <p class="muted" style="margin-top: 6px">
+                  Order ahead and skip the line.
+                </p>
+                <div class="chips">
+                  <span class="chip on">Coffee</span
+                  ><span class="chip">Tea</span><span class="chip">Pastry</span>
+                </div>
+                <div class="mi">
+                  <span class="sw"></span>
+                  <div><b>Iced latte</b><span class="muted">$3.50</span></div>
+                  <span class="add">+</span>
+                </div>
+                <div class="mi">
+                  <span class="sw"></span>
+                  <div><b>Flat white</b><span class="muted">$3.20</span></div>
+                  <span class="add">+</span>
+                </div>
+                <div class="mi">
+                  <span class="sw"></span>
+                  <div><b>Cold brew</b><span class="muted">$3.80</span></div>
+                  <span class="add">+</span>
+                </div>
+                <div class="mi">
+                  <span class="sw"></span>
+                  <div><b>Matcha latte</b><span class="muted">$4.20</span></div>
+                  <span class="add">+</span>
+                </div>
+                <div class="pbtn">View order (2) &nbsp; $6.10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-m1">
+          <h2>Mobile apps your customers keep on their phone.</h2>
+          <p class="lead">
+            A branded app for iOS and Android that connects to your POS, so an
+            order placed on the phone shows up at the counter.
+          </p>
+          <div class="feat">
+            <div>
+              <b>Order ahead</b>Customers order and pay before they arrive.
+            </div>
+            <div>
+              <b>Order updates</b>A notification when the order is ready.
+            </div>
+            <div><b>Loyalty</b>Rewards that bring people back.</div>
+            <div><b>Your brand</b>Your name, colors and menu throughout.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s paper chamfer-tl" id="process">
+      <div class="wrap">
+        <h2 style="max-width: 760px">From first call to first sale.</h2>
+        <div class="steps4">
+          <div class="st">
+            <div class="n">1</div>
+            <h3>Talk</h3>
+            <p>We learn how your business runs and what slows it down.</p>
+          </div>
+          <div class="st">
+            <div class="n">2</div>
+            <h3>Design</h3>
+            <p>
+              We agree on the screens, the menu and the setup before building.
+            </p>
+          </div>
+          <div class="st">
+            <div class="n">3</div>
+            <h3>Build</h3>
+            <p>We build the POS and the app, then test them with your staff.</p>
+          </div>
+          <div class="st">
+            <div class="n">4</div>
+            <h3>Launch</h3>
+            <p>
+              We install, train your team and stay available after opening day.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ctasec" id="contact">
+      <span class="spark"></span><span class="glow"></span>
+      <div class="wrap">
+        <h2>Tell us how your business runs.</h2>
+        <p>
+          Leave your email and we'll set up a call to show you the POS and the
+          app.
+        </p>
+        <div class="form">
+          <div class="input">you@yourbusiness.com</div>
+          <a class="btn" href="#">Book a demo</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <a class="brand" href="#"
+          ><img src="../app/icon.png" alt="" />SparkByte</a
+        >
+        <div class="fl">
+          <a href="#pos">POS systems</a><a href="#apps">Mobile apps</a
+          ><a href="#process">How we work</a><a href="#contact">Contact</a>
+        </div>
+        <span>© 2026 SparkByte</span>
+      </div>
+    </footer>
+
+    <script>
+      function fit() {
+        document.querySelectorAll(".fit").forEach(function (el) {
+          var w = +el.dataset.w,
+            h = +el.dataset.h,
+            p = el.parentElement;
+          var s = Math.min(1, p.clientWidth / w);
+          el.style.width = w + "px";
+          el.style.height = h + "px";
+          el.style.transform = "scale(" + s + ")";
+          p.style.height = h * s + "px";
+        });
+      }
+      addEventListener("load", fit);
+      addEventListener("resize", fit);
+      fit();
+    </script>
+  </body>
+</html>
