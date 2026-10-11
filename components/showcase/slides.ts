@@ -1,7 +1,16 @@
-// What the scroll-driven showcase says: one slide per thing a shop can set up
-// in the POS for itself. Each slide's live demo is in demos/.
+// What the showcase says: one slide per thing a shop can set up in the POS
+// for itself, then what the POS tells it in return. Each slide's live demo is
+// in demos/.
 
-export type SlideId = "type" | "fields" | "tabs" | "order" | "seats" | "floor";
+export type SlideId =
+  | "type"
+  | "fields"
+  | "tabs"
+  | "order"
+  | "seats"
+  | "floor"
+  | "data"
+  | "ai";
 
 export type Slide = {
   id: SlideId;
@@ -103,5 +112,33 @@ export const slides: Slide[] = [
     ],
     hint: "Try it: drag a table, or switch to Walls and draw",
     icon: "M3.5 4.5h17v15h-17zM3.5 10.5H10M10 4.5V13M14.5 19.5V14h6",
+  },
+  {
+    id: "data",
+    tab: "Analytics",
+    lead: "Your sales, as",
+    accent: "the chart you need",
+    body: "The Data screen turns every receipt into charts: revenue day by day, sales by category, your best sellers and your best clients. Pick the one that answers your question.",
+    points: [
+      ["Revenue trend", "Day by day, through the month"],
+      ["Best sellers", "Ranked, and filtered by category"],
+      ["Top clients", "Who buys the most from you"],
+    ],
+    hint: "Try it: switch the chart, or point at a day",
+    icon: "M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6",
+  },
+  {
+    id: "ai",
+    tab: "AI assistant",
+    lead: "Ask your numbers",
+    accent: "a question",
+    body: "An assistant built into the POS reads your own sales. Ask what you earned each month, where you gained and where you lost, or what to do next, and it answers from your figures.",
+    points: [
+      ["Your data", "Answers come from your own sales"],
+      ["Month by month", "Income, gains and losses compared"],
+      ["What next", "A plan for the months ahead"],
+    ],
+    hint: "Try it: tap a question",
+    icon: "M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.4A8 8 0 1 1 20 11.5zM9 10.5h6M9 13.5h3.5",
   },
 ];

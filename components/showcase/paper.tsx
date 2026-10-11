@@ -32,13 +32,14 @@ const pct = (v: number) => `${v}%`;
  * The showcase's backdrop: sheets of black paper lying at a tilt, their folds
  * catching the light, with a few loose strokes between them like the streaks
  * in the hero's sky. Each piece carries its own --dx and --dy, and
- * `.paper-drift` moves it by those for every slide the stage's --at counts,
- * so the paper shifts as the page scrolls.
+ * `.paper-drift` moves it by those for every slide --at counts, which the
+ * stage sets here (`data-at`), so the paper shifts as the slides go by.
  */
 export function Paper() {
   return (
     <div
       aria-hidden="true"
+      data-at=""
       className="pointer-events-none absolute inset-0 overflow-hidden bg-[radial-gradient(110%_80%_at_50%_0%,rgba(199,214,255,0.07),transparent_70%)]"
     >
       <div className="absolute left-1/2 top-1/2 size-[150vmax] -translate-x-1/2 -translate-y-1/2 -rotate-[24deg]">
@@ -55,7 +56,7 @@ export function Paper() {
                 "--dy": `${s.dy}px`,
               } as CSSProperties
             }
-            className={`paper-drift absolute rounded-[3rem] bg-linear-to-b to-transparent to-85% shadow-[0_-1px_0_rgba(255,255,255,0.09)] ${
+            className={`paper-drift paper-sheet absolute rounded-[3rem] bg-linear-to-b to-transparent to-85% shadow-[0_-1px_0_rgba(255,255,255,0.09)] ${
               s.cool ? "from-glow/8" : "from-white/5"
             }`}
           />

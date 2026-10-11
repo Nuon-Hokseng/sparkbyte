@@ -11,11 +11,17 @@ import { Explore } from "./screens/explore";
 import { MapScreen } from "./screens/map";
 import { Welcome } from "./screens/welcome";
 import { tour, type TourId } from "./tour";
+import { StepFill } from "@/components/layout/step-fill";
 import { useScrollStage } from "@/hooks/use-scroll-stage";
 
 const COUNT = tour.length;
 // How much scrolling moves the tour on by one screen, in svh.
 const STEP = 30;
+// On a touch screen, how long a screen stays up before the next comes by
+// itself, in ms.
+const DWELL = 7000;
+
+type Stage = ReturnType<typeof useScrollStage>;
 
 const screens: Record<TourId, ComponentType<ScreenProps>> = {
   welcome: Welcome,
@@ -29,13 +35,13 @@ const two = (n: number) => String(n).padStart(2, "0");
 
 /**
  * A tour of TilomNov, the property app, on a phone held in a hand. Like the
- * POS showcase it is a carousel driven by scrolling, but here one phone stays
- * put and its screen changes. The screens are wired to one another as in the
+ * POS showcase it is a carousel on a stage (see `useScrollStage`), but here
+ * one phone stays put and its screen changes. The screens are wired to one another as in the
  * app: its tabs, its cards and its back buttons move the tour too.
  */
 export function AppTour() {
-  const { sectionRef, stageRef, active, onStage, reduced, goTo } =
-    useScrollStage(COUNT);
+  const stage = useScrollStage(COUNT, DWELL);
+  const { sectionRef, stageRef, active, onStage, reduced, goTo } = stage;
 
   // How many times the visitor has pressed the phone's screen. The hand
   // presses along with them, as it does when the tour moves on.
@@ -50,15 +56,16 @@ export function AppTour() {
       ref={sectionRef}
       id="apps"
       aria-label="TilomNov, a mobile app we are releasing soon"
-      // One screen for the stage, plus a stretch of scrolling per slide.
-      style={{ height: `${100 + COUNT * STEP}svh` }}
-      className="relative bg-ink"
+      style={{ "--slides": COUNT, "--slide-len": `${STEP}svh` } as CSSProperties}
+      // The header's links land on the stage itself, which leaves the header
+      // its own room: undo the page's allowance for it.
+      className="stage-section relative -scroll-mt-20 bg-ink"
     >
       <div
         ref={stageRef}
         className="sticky top-0 h-svh overflow-hidden border-t border-line"
       >
-        <Rings />
+        <Rings play={onStage} />
 
         <div className="relative mx-auto grid h-full w-full max-w-360 grid-cols-1 grid-rows-[auto_minmax(0,1fr)] gap-y-4 px-5 pt-[calc(4.5rem+env(safe-area-inset-top))] sm:gap-y-6 sm:px-8 lg:grid-cols-12 lg:grid-rows-1 lg:gap-x-12 lg:px-16 lg:pt-[calc(5rem+env(safe-area-inset-top))]">
           <h2 className="sr-only">Mobile apps</h2>
@@ -74,7 +81,7 @@ export function AppTour() {
               <span className="whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium text-mist ring-1 ring-white/20">
                 Release soon
               </span>
-              <Steps active={active} goTo={goTo} />
+              <Steps stage={stage} />
             </div>
 
             {/* The slides' text shares one cell, so the tallest sets its
@@ -124,8 +131,13 @@ export function AppTour() {
                 onStage || reduced ? "" : "translate-y-[14%] opacity-0"
               }`}
             >
-              <div className="phone-lean">
-                <div className="animate-[hand-float_7s_ease-in-out_infinite] motion-reduce:animate-none">
+              <div data-through="" className="phone-lean">
+                {/* Off stage the hand holds still: nobody is there to see it. */}
+                <div
+                  className={`animate-[hand-float_7s_ease-in-out_infinite] motion-reduce:animate-none ${
+                    onStage ? "" : "[animation-play-state:paused]"
+                  }`}
+                >
                   <Phone tap={`${active}-${presses}`}>
                     {/* Remounting restarts the screen: on each slide, and
                         each time the stage comes back into view. */}
@@ -148,7 +160,7 @@ export function AppTour() {
             </div>
           </div>
 
-          <Steps active={active} goTo={goTo} listed />
+          <Steps stage={stage} listed />
         </div>
       </div>
     </section>
@@ -157,18 +169,11 @@ export function AppTour() {
 
 /**
  * The tour's steps. Beside the phone on a wide screen they are a list of the
- * screens' names, each with a line that fills as the page scrolls through it;
+ * screens' names, each with a line that fills as its screen goes by;
  * elsewhere there is only room for the lines, in a row.
  */
-function Steps({
-  active,
-  goTo,
-  listed = false,
-}: {
-  active: number;
-  goTo: (i: number) => void;
-  listed?: boolean;
-}) {
+function Steps({ stage, listed = false }: { stage: Stage; listed?: boolean }) {
+  const { active, goTo } = stage;
   return (
     <nav
       aria-label="Screens of the app"
@@ -193,23 +198,12 @@ function Steps({
             className={`block shrink-0 overflow-hidden rounded-full bg-white/15 ${
               listed
                 ? "w-0.5"
-                : `h-0.75 transition-[width] duration-500 motion-reduce:transition-none ${
+                : `h-0.75 motion-reduce:transition-none pointer-fine:transition-[width] pointer-fine:duration-500 ${
                     i === active ? "w-8" : "w-3"
                   }`
             }`}
           >
-            <span
-              style={
-                {
-                  "--fill": `clamp(0, calc(var(--at, 0) - ${i}), 1)`,
-                } as CSSProperties
-              }
-              className={`block size-full rounded-full bg-white ${
-                listed
-                  ? "origin-top [scale:1_var(--fill)]"
-                  : "origin-left [scale:var(--fill)_1]"
-              }`}
-            />
+            <StepFill index={i} stage={stage} vertical={listed} />
           </span>
           {listed && (
             <span className="block py-3.5">

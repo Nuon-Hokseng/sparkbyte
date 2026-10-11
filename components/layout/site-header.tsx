@@ -100,8 +100,11 @@ export function SiteHeader() {
 
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b pt-[env(safe-area-inset-top)] transition-colors duration-300 ${
+          // Blurring what is behind the header is redone every frame that
+          // something moves under it, which a phone can ill afford: there
+          // the header is simply darker.
           solid
-            ? "border-white/10 bg-ink/85 backdrop-blur-xl"
+            ? "border-white/10 bg-ink/85 backdrop-blur-xl pointer-coarse:bg-ink/95 pointer-coarse:backdrop-blur-none"
             : "border-transparent bg-transparent"
         }`}
       >
@@ -185,7 +188,7 @@ export function SiteHeader() {
         ref={panelRef}
         inert={!open}
         aria-hidden={!open}
-        className={`fixed inset-0 z-40 flex flex-col overflow-y-auto bg-ink/95 pb-[max(2rem,env(safe-area-inset-bottom))] pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pt-[calc(4rem+env(safe-area-inset-top)+1.5rem)] backdrop-blur-xl duration-300 motion-reduce:transition-none sm:px-8 lg:hidden ${
+        className={`fixed inset-0 z-40 flex flex-col overflow-y-auto bg-ink/95 pb-[max(2rem,env(safe-area-inset-bottom))] pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] pt-[calc(4rem+env(safe-area-inset-top)+1.5rem)] backdrop-blur-xl duration-300 pointer-coarse:bg-ink pointer-coarse:backdrop-blur-none motion-reduce:transition-none sm:px-8 lg:hidden ${
           // Visibility must flip instantly on open or the links cannot take focus;
           // on close it waits for the fade.
           open

@@ -49,6 +49,8 @@ app/                      Routes, global styles and metadata
 components/
   layout/
     site-header.tsx       Navigation bar and mobile menu
+    site-footer.tsx       Footer: what we build, where to reach us
+    step-fill.tsx         The line of a step in a carousel's progress row
   hero/
     hero.tsx              The hero section
     hero-headline.tsx     Headline whose letters can be fed to the black hole
@@ -60,9 +62,9 @@ components/
       space-backdrop.tsx
       shader.ts
   showcase/
-    showcase.tsx          Scroll-driven carousel of what a shop can set up itself
+    showcase.tsx          Carousel of what a shop can set up itself
     slides.ts             Each slide's headline, text, points and icon
-    paper.tsx             The paper backdrop that slides as the page scrolls
+    paper.tsx             The paper backdrop that slides as the slides go by
     demos/                One live, usable piece of the POS per slide
       kit.tsx             What the demos share: props, scripted opening moves
       business-type.tsx   Switching between optician, retail and restaurant
@@ -71,20 +73,33 @@ components/
       table-order.tsx     A table's running bill, and the QR menu
       table-sizes.tsx     Floors, batches of tables and seats per table
       floor-plan.tsx      Dragging tables and drawing walls
+      analytics.tsx       The Data screen: the month's sales as charts
+      assistant.tsx       The AI assistant answering from those sales
+      charts.tsx          The line and bar charts both of them draw
+      sales.ts            The made-up month of sales they chart
   apps/
-    app-tour.tsx          Scroll-driven tour of the TilomNov app on a phone
+    app-tour.tsx          Carousel tour of the TilomNov app on a phone
     tour.ts               Each slide's headline, text and hint
     phone.tsx             The phone, and the hand holding it
     hand-art.ts           The hand's traced outlines (written by `npm run hand`)
-    rings.tsx             The rings backdrop that widens as the page scrolls
+    rings.tsx             The rings backdrop that widens as the slides go by
     parts.tsx             What the screens share: icons, cards, tab bar
     listings.ts           The sample properties the screens show
     screens/              One screen of the app per slide
       welcome.tsx, map.tsx, chat.tsx, explore.tsx, detail.tsx
 
+  process/
+    process.tsx           "How we work": the four steps, and the stone picked
+    orbit.tsx             The Earth, its ring and the stones going round it
+    earth-shader.ts       GLSL for the Earth
+    stones.ts             The steps, and the stones: what is made, what is not
+  contact/
+    contact.tsx           Contact: a form that writes the visitor's email for them
+
 hooks/
   use-reduced-motion.ts
-  use-scroll-stage.ts     The scrolling behind both carousels
+  use-scroll-stage.ts     What drives both carousels: scrolling with a mouse; on a
+                          touch screen a swipe per slide, and a timer
   use-script.ts           Timed opening moves for a demo or a screen
 
 lib/
@@ -97,6 +112,7 @@ scripts/
 design/
   logo-source.png         The logo artwork every icon is cut from
   hand-source.jpg         The photo the app tour's hand is traced from
+  earth-source.jpg        The map of the Earth, as NASA publishes it (2048 x 1024)
   landing-mock.*          The original static mock of the landing page
 
 public/                   Files served as they are
@@ -139,6 +155,11 @@ The hand is traced from "Female Hand Holding Smartphone With Blank Screen" by
 personalgraphic.official, released under CC0:
 <https://www.flickr.com/photos/198895458@N04/53097224746>.
 
+The Earth in "How we work" is wrapped in NASA's Blue Marble map ("Land
+Surface, Shallow Water, and Shaded Topography", NASA Goddard Space Flight
+Center, image by Reto Stöckli), which is in the public domain:
+<https://visibleearth.nasa.gov/images/57752>.
+
 The photos on the POS item cards are public-domain or CC0 images found
 through Openverse:
 
@@ -167,7 +188,12 @@ TilomNov app's own design screens.
 - Set `NEXT_PUBLIC_SITE_URL`.
 - Check the map in `public/apps/map.webp` may be shown publicly: it is a
   screenshot of the app's map provider, labels and all.
-- Write a real description in `lib/site.ts`.
+- Write a real description in `lib/site.ts`, and put the real contact details
+  there: the email address is a placeholder that cannot receive mail, and the
+  phone number and Telegram name are empty, so the site leaves them out.
 - Replace the placeholder copy in `components/hero/hero.tsx`,
-  `components/showcase/slides.ts` and `components/apps/tour.ts`.
-- The header links to `#process` and `#contact`, which do not exist yet.
+  `components/showcase/slides.ts`, `components/apps/tour.ts`,
+  `components/process/` and `components/contact/contact.tsx`.
+- The contact form has no server behind it: it opens the visitor's email app.
+  To have it send by itself it needs an email service and a server action.
+- There is no privacy policy, and the footer does not link to one.

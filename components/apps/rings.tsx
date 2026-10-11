@@ -11,13 +11,14 @@ const RINGS = [
 /**
  * The app tour's backdrop: rings spreading from where the phone is held, like
  * a place being found on a map. `.ring-drift` widens each by its --grow for
- * every slide the stage's --at counts, and one more pulses outwards on its
- * own.
+ * every slide --at counts, which the stage sets here (`data-at`), and one
+ * more pulses outwards on its own while there is someone to `play` to.
  */
-export function Rings() {
+export function Rings({ play }: { play: boolean }) {
   return (
     <div
       aria-hidden="true"
+      data-at=""
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       <div className="absolute left-1/2 top-[68%] lg:top-[56%]">
@@ -35,7 +36,11 @@ export function Rings() {
             className="ring-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/8"
           />
         ))}
-        <div className="absolute size-[48vmin] -translate-x-1/2 -translate-y-1/2 animate-[ring-out_6s_ease-out_infinite] rounded-full border border-glow/40 motion-reduce:hidden" />
+        <div
+          className={`absolute size-[48vmin] -translate-x-1/2 -translate-y-1/2 animate-[ring-out_6s_ease-out_infinite] rounded-full border border-glow/40 motion-reduce:hidden ${
+            play ? "" : "[animation-play-state:paused]"
+          }`}
+        />
       </div>
     </div>
   );

@@ -1,5 +1,9 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef } from "react";
+import type { ReactNode, RefObject } from "react";
 import { handArt, type HandLayer } from "./hand-art";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const { size, body, screen, tilt, thumbJoint } = handArt;
 
@@ -23,38 +27,88 @@ const DRAWING = {
   }%`,
 };
 
+// How far past its outline a part's shading and shadow may reach, in px of
+// the photo.
+const SPILL = 16;
+// Where the wrist starts to fade out, and where it is gone, in px of the
+// photo: before the drawing's lower edge can show.
+const WRIST = [0.88 * size, 0.99 * size];
+
+type Box = { x: number; y: number; width: number; height: number };
+
+/** The box a part's outline fits in, with room for what spills out of it. */
+function boxOf([shape]: HandLayer[]): Box {
+  // The outlines are made of M and C alone, so their numbers come in pairs.
+  const at = shape.d.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+  const xs = at.filter((_, i) => i % 2 === 0);
+  const ys = at.filter((_, i) => i % 2 === 1);
+  const x = Math.floor(Math.min(...xs)) - SPILL;
+  const y = Math.floor(Math.min(...ys)) - SPILL;
+  return {
+    x,
+    y,
+    width: Math.ceil(Math.max(...xs)) + SPILL - x,
+    height: Math.ceil(Math.max(...ys)) + SPILL - y,
+  };
+}
+
+const BOXES = {
+  behind: boxOf(handArt.behind),
+  thumb: boxOf(handArt.thumb),
+  front: boxOf(handArt.front),
+};
+
+/** A point of the photo, as percentages of a part's box. */
+const within = (box: Box, x: number, y: number) =>
+  `${(((x - box.x) / box.width) * 100).toFixed(2)}% ${(
+    ((y - box.y) / box.height) *
+    100
+  ).toFixed(2)}%`;
+
 /**
  * One part of the hand. Its outline is drawn crisp, and the bands of lighter
  * skin are blurred into one another inside it, so the shading is soft but the
  * edge is not.
  *
+ * That blur is the costly thing on the page to draw, so each part is drawn
+ * once, into a layer of its own no bigger than the part, and from then on is
+ * only ever moved: by whatever animates `moving`, which is that layer, and by
+ * the hand as a whole. Nothing that changes on the phone's screen makes it be
+ * drawn again.
+ *
  * The thumb is `jointed`: it fades out where it overlaps the palm, so no seam
- * shows between the two, and it swings about its joint to press the phone.
- * `nails` and `fold` are drawn on over the shading, which is too soft to show
- * them; `nailTint` is how strongly, less for the fingertips, which are in
- * shadow, than for the thumb. `soft` is how far the bands are blurred, in px of the photo: more for
- * the broad palm than for the thumb and the fingertips.
+ * shows between the two, and turns about its joint. `nails` and `fold` are
+ * drawn on over the shading, which is too soft to show them; `nailTint` is
+ * how strongly, less for the fingertips, which are in shadow, than for the
+ * thumb. `soft` is how far the bands are blurred, in px of the photo: more
+ * for the broad palm than for the thumb and the fingertips. `mask` is a CSS
+ * mask over the whole part.
  */
 function Hand({
   part,
-  layers,
+  moving,
   jointed = false,
   nails,
   nailTint = 0.8,
   fold,
   soft = 4,
+  mask,
   className = "",
 }: {
-  part: string;
-  layers: HandLayer[];
+  part: keyof typeof BOXES;
+  moving?: RefObject<HTMLDivElement | null>;
   jointed?: boolean;
   nails?: string;
   nailTint?: number;
   fold?: string;
   soft?: number;
+  mask?: string;
   className?: string;
 }) {
-  const [shape, ...bands] = layers;
+  const [shape, ...bands] = handArt[part];
+  const box = BOXES[part];
+  const pct = (v: number) => `${(v / size) * 100}%`;
+
   const drawn = (
     <>
       <path d={shape.d} fill={shape.fill} fillRule="evenodd" />
@@ -94,71 +148,119 @@ function Hand({
       </g>
     </>
   );
+
   return (
-    <svg
-      viewBox={`0 0 ${size} ${size}`}
+    <div
       aria-hidden="true"
       style={DRAWING}
-      className={`pointer-events-none absolute max-w-none ${className}`}
+      className="pointer-events-none absolute"
     >
-      <defs>
-        <clipPath id={`hand-${part}`}>
-          <path d={shape.d} fillRule="evenodd" />
-        </clipPath>
-        <filter id={`hand-${part}-soft`} x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation={soft} />
-        </filter>
-        <filter id={`hand-${part}-fine`}>
-          <feGaussianBlur stdDeviation="0.8" />
-        </filter>
-        {jointed && (
-          <>
-            <linearGradient
-              id={`hand-${part}-fade`}
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              y1={thumbJoint.from}
-              x2="0"
-              y2={thumbJoint.to}
-            >
-              <stop offset="0" stopColor="#fff" />
-              <stop offset="1" stopColor="#000" />
-            </linearGradient>
-            <mask
-              id={`hand-${part}-mask`}
-              maskUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width={size}
-              height={size}
-            >
-              <rect width={size} height={size} fill={`url(#hand-${part}-fade)`} />
-            </mask>
-          </>
-        )}
-      </defs>
-      {jointed ? (
-        <g
-          style={{
-            transformOrigin: `${thumbJoint.pivot[0]}px ${thumbJoint.pivot[1]}px`,
-          }}
-          className="transform-view animate-[thumb-press_0.8s_ease-in-out]"
+      <div
+        ref={moving}
+        style={{
+          left: pct(box.x),
+          top: pct(box.y),
+          width: pct(box.width),
+          height: pct(box.height),
+          transformOrigin: jointed
+            ? within(box, thumbJoint.pivot[0], thumbJoint.pivot[1])
+            : undefined,
+        }}
+        className="absolute will-change-transform"
+      >
+        <svg
+          viewBox={`${box.x} ${box.y} ${box.width} ${box.height}`}
+          style={mask ? { maskImage: mask, WebkitMaskImage: mask } : undefined}
+          className={`block size-full ${className}`}
         >
-          {/* The shadow it casts on the phone is drawn before the fade, in
-              px of the photo, so it cannot show through where the thumb
-              thins out over the palm. */}
-          <g mask={`url(#hand-${part}-mask)`}>
-            <g style={{ filter: "drop-shadow(3px 2px 4px rgba(0, 0, 0, 0.4))" }}>
-              {drawn}
+          <defs>
+            <clipPath id={`hand-${part}`}>
+              <path d={shape.d} fillRule="evenodd" />
+            </clipPath>
+            <filter
+              id={`hand-${part}-soft`}
+              x="-10%"
+              y="-10%"
+              width="120%"
+              height="120%"
+            >
+              <feGaussianBlur stdDeviation={soft} />
+            </filter>
+            <filter id={`hand-${part}-fine`}>
+              <feGaussianBlur stdDeviation="0.8" />
+            </filter>
+            {jointed && (
+              <>
+                <linearGradient
+                  id={`hand-${part}-fade`}
+                  gradientUnits="userSpaceOnUse"
+                  x1="0"
+                  y1={thumbJoint.from}
+                  x2="0"
+                  y2={thumbJoint.to}
+                >
+                  <stop offset="0" stopColor="#fff" />
+                  <stop offset="1" stopColor="#000" />
+                </linearGradient>
+                <mask
+                  id={`hand-${part}-mask`}
+                  maskUnits="userSpaceOnUse"
+                  x={box.x}
+                  y={box.y}
+                  width={box.width}
+                  height={box.height}
+                >
+                  <rect
+                    x={box.x}
+                    y={box.y}
+                    width={box.width}
+                    height={box.height}
+                    fill={`url(#hand-${part}-fade)`}
+                  />
+                </mask>
+              </>
+            )}
+          </defs>
+          {jointed ? (
+            // The shadow it casts on the phone is drawn before the fade, in
+            // px of the photo, so it cannot show through where the thumb
+            // thins out over the palm.
+            <g mask={`url(#hand-${part}-mask)`}>
+              <g style={{ filter: "drop-shadow(3px 2px 4px rgba(0, 0, 0, 0.4))" }}>
+                {drawn}
+              </g>
             </g>
-          </g>
-        </g>
-      ) : (
-        drawn
-      )}
-    </svg>
+          ) : (
+            drawn
+          )}
+        </svg>
+      </div>
+    </div>
   );
 }
+
+// The wrist's fade, down the box of the part behind the phone.
+const WRIST_FADE = `linear-gradient(#000 ${(
+  ((WRIST[0] - BOXES.behind.y) / BOXES.behind.height) *
+  100
+).toFixed(2)}%, transparent ${(
+  ((WRIST[1] - BOXES.behind.y) / BOXES.behind.height) *
+  100
+).toFixed(2)}%)`;
+
+// The thumb lifts off the phone's edge, then presses it; the fingers tighten
+// on the phone. Each stretch of a move eases in and out.
+const PRESS = [
+  { transform: "rotate(0deg)", easing: "ease-in-out" },
+  { transform: "rotate(-3deg)", offset: 0.25, easing: "ease-in-out" },
+  { transform: "rotate(5deg)", offset: 0.6, easing: "ease-in-out" },
+  { transform: "rotate(0deg)" },
+];
+const GRIP = [
+  { translate: "0 0", easing: "ease-out" },
+  { translate: "-0.7em 0.15em", offset: 0.4, easing: "ease-out" },
+  { translate: "0 0" },
+];
 
 /**
  * A phone held in a hand. `children` is the screen, 44em wide. Changing `tap`
@@ -176,6 +278,22 @@ export function Phone({
   tap: string | number;
   children: ReactNode;
 }) {
+  const thumb = useRef<HTMLDivElement>(null);
+  const fingers = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+
+  // The parts are moved where they are, not mounted afresh, so that none of
+  // them has to be drawn again.
+  useEffect(() => {
+    if (reduced) return;
+    const press = thumb.current?.animate(PRESS, { duration: 800 });
+    const grip = fingers.current?.animate(GRIP, { duration: 500 });
+    return () => {
+      press?.cancel();
+      grip?.cancel();
+    };
+  }, [tap, reduced]);
+
   return (
     <div
       style={{
@@ -185,13 +303,7 @@ export function Phone({
       // Nudged right, so that hand and phone together sit in the middle.
       className="phone-rig relative left-[4.9em] mx-auto"
     >
-      {/* The wrist fades out before the drawing's lower edge can show. */}
-      <Hand
-        part="behind"
-        layers={handArt.behind}
-        soft={7}
-        className="mask-[linear-gradient(#000_88%,transparent_99%)]"
-      />
+      <Hand part="behind" soft={7} mask={WRIST_FADE} />
 
       {/* The phone's body. Its rim is light enough to be seen across the gap
           the thumb leaves beside it. */}
@@ -216,22 +328,19 @@ export function Phone({
         />
       </div>
 
-      {/* Remounting on each tap replays the press and the grip. */}
       <Hand
-        key={`thumb-${tap}`}
         part="thumb"
-        layers={handArt.thumb}
+        moving={thumb}
         jointed
         nails={handArt.nail}
         fold={handArt.fold}
       />
       <Hand
-        key={tap}
         part="front"
-        layers={handArt.front}
+        moving={fingers}
         nails={handArt.fingerNails}
         nailTint={0.38}
-        className="animate-[grip_0.5s_ease-out] drop-shadow-[-0.3em_0.4em_0.5em_rgba(0,0,0,0.35)]"
+        className="drop-shadow-[-0.3em_0.4em_0.5em_rgba(0,0,0,0.35)]"
       />
     </div>
   );

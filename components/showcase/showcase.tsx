@@ -1,6 +1,8 @@
 "use client";
 
 import type { ComponentType, CSSProperties } from "react";
+import { Analytics } from "./demos/analytics";
+import { Assistant } from "./demos/assistant";
 import { BusinessType } from "./demos/business-type";
 import { Fields } from "./demos/fields";
 import { FloorPlan } from "./demos/floor-plan";
@@ -10,12 +12,16 @@ import { TableSizes } from "./demos/table-sizes";
 import { Tabs } from "./demos/tabs";
 import { Paper } from "./paper";
 import { slides, type SlideId } from "./slides";
+import { StepFill } from "@/components/layout/step-fill";
 import { useScrollStage } from "@/hooks/use-scroll-stage";
 
 const COUNT = slides.length;
 // How much scrolling moves the carousel on by one slide, in svh. Short, so
 // the whole set passes in under two screens.
 const STEP = 28;
+// On a touch screen, how long a slide stays up before the next comes by
+// itself, in ms: long enough for its demo to finish showing itself off.
+const DWELL = 7000;
 
 const demos: Record<SlideId, ComponentType<DemoProps>> = {
   type: BusinessType,
@@ -24,6 +30,8 @@ const demos: Record<SlideId, ComponentType<DemoProps>> = {
   order: TableOrder,
   seats: TableSizes,
   floor: FloorPlan,
+  data: Analytics,
+  ai: Assistant,
 };
 
 // On a wide screen the text and the demo swap sides from one slide to the
@@ -36,18 +44,20 @@ const SIDES = [
 const two = (n: number) => String(n).padStart(2, "0");
 
 /**
- * A carousel driven by scrolling: the stage sticks to the viewport while the
- * page scrolls through the section, and every slide plays again each time it
- * returns.
+ * A carousel on a stage (see `useScrollStage`). With a mouse it is driven by
+ * scrolling: the stage sticks to the viewport while the page scrolls through
+ * the section. On a touch screen a swipe moves one slide, and the slides
+ * change by themselves if left alone. Either way a slide plays again each
+ * time it returns.
  *
  * Each slide brings its own text and its own live demo: a piece of the POS
- * that shows itself off, then is the visitor's to try. The scroll itself is
- * always on show: the step being filled in the progress row, the paper
- * sliding behind, the demo easing past.
+ * that shows itself off, then is the visitor's to try. Progress is always on
+ * show: the step being filled in the progress row, the paper sliding behind,
+ * the demo easing past.
  */
 export function Showcase() {
-  const { sectionRef, stageRef, active, onStage, reduced, goTo } =
-    useScrollStage(COUNT);
+  const stage = useScrollStage(COUNT, DWELL);
+  const { sectionRef, stageRef, active, onStage, reduced, goTo } = stage;
 
   const slide = slides[active];
   const Demo = demos[slide.id];
@@ -58,9 +68,10 @@ export function Showcase() {
       ref={sectionRef}
       id="pos"
       aria-label="What you can set up in the POS"
-      // One screen for the stage, plus a stretch of scrolling per slide.
-      style={{ height: `${100 + COUNT * STEP}svh` }}
-      className="relative bg-ink"
+      style={{ "--slides": COUNT, "--slide-len": `${STEP}svh` } as CSSProperties}
+      // The header's links land on the stage itself, which leaves the header
+      // its own room: undo the page's allowance for it.
+      className="stage-section relative -scroll-mt-20 bg-ink"
     >
       <div ref={stageRef} className="sticky top-0 h-svh overflow-hidden">
         <Paper />
@@ -109,17 +120,13 @@ export function Showcase() {
                   className="group flex h-10 items-center px-1"
                 >
                   <span
-                    className={`block h-0.75 overflow-hidden rounded-full bg-white/15 transition-[width,background-color] duration-500 group-hover:bg-white/30 motion-reduce:transition-none ${
+                    // The line lengthens at once on a phone: easing its width would lay
+                    // the whole stage out again on every frame of the change.
+                    className={`block h-0.75 overflow-hidden rounded-full bg-white/15 group-hover:bg-white/30 motion-reduce:transition-none pointer-fine:transition-[width,background-color] pointer-fine:duration-500 ${
                       i === active ? "w-10" : "w-3.5"
                     }`}
                   >
-                    {/* Fills as the page scrolls through this slide. */}
-                    <span
-                      style={{
-                        transform: `scaleX(clamp(0, calc(var(--at, 0) - ${i}), 1))`,
-                      }}
-                      className="block h-full origin-left rounded-full bg-white"
-                    />
+                    <StepFill index={i} stage={stage} />
                   </span>
                 </button>
               ))}
@@ -180,6 +187,7 @@ export function Showcase() {
           <div
             role="group"
             aria-label={`Live demo: ${slide.tab}`}
+            data-through=""
             className={`demo-frame row-start-3 lg:col-span-7 lg:row-span-2 lg:row-start-1 lg:self-center ${demoSide}`}
           >
             {/* Remounting restarts the demo: on each slide, and each time the

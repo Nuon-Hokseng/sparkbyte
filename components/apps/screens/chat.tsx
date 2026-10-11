@@ -161,7 +161,7 @@ export function Chat({ play, settled, go }: ScreenProps) {
 
         <div
           ref={list}
-          className="scrollbar-none flex min-h-0 flex-1 flex-col gap-[1em] overflow-y-auto bg-mock-fog px-[1.7em] py-[1.6em]"
+          className="scrollbar-none flex min-h-0 flex-1 flex-col gap-[1em] stage-list overflow-y-auto bg-mock-fog px-[1.7em] py-[1.6em]"
         >
           <p className="mx-auto mb-[0.6em] flex max-w-[30em] items-start gap-[0.8em] rounded-[1.2em] bg-mock-accent-soft px-[1.3em] py-[1em] text-mock-accent">
             <Icon name="lock" className="mt-[0.1em] size-[1.6em]" />
