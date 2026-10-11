@@ -13,7 +13,7 @@ export const site = {
   themeColor: "#050506",
   /** What we do, in a sentence, for the footer. */
   about:
-    "Point-of-sale systems and mobile apps for shops, cafés and restaurants.",
+    "Point-of-sale systems and mobile apps.",
   /** Where we are based. */
   location: "Cambodia",
   /** The year in the footer's copyright line. */

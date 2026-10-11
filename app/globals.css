@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* A screen with little height, like a small laptop's: `short:` styles are
+   for fitting a whole section into it. */
+@custom-variant short (@media (max-height: 800px));
+
 :root {
   --ink: #050506;
   --silver: #9aa0aa;
@@ -64,6 +68,12 @@ body {
 ::selection {
   background: #fff;
   color: var(--ink);
+}
+
+/* A part of the page that focus was moved to, so that reading carries on from
+   there (see components/layout/travel.tsx): it needs no ring round all of it. */
+section[tabindex="-1"]:focus-visible {
+  outline: none;
 }
 
 /* ── Hero mark docking into the header ─────────────────────────────────────
@@ -311,7 +321,10 @@ html[data-menu-open] canvas[data-bh-canvas] {
    step's line filling while its slide is up, on a touch screen. chart-wipe:
    the cover over a line chart drawing aside, so the chart is drawn from left
    to right. bar-in: a bar of a chart growing from the axis. stone-glow: the
-   light of a stone in "How we work", swelling and fading. */
+   light of a stone in "How we work", swelling and fading. travel-cover: the
+   dark spreading over the page on the way to a distant part of it.
+   travel-in: the mark arriving in the middle of that dark. travel-streak: a
+   streak of light flying outwards past it. travel-spin: the orbit round it. */
 @keyframes screen-in {
   from {
     opacity: 0;
@@ -369,6 +382,39 @@ html[data-menu-open] canvas[data-bh-canvas] {
 @keyframes chart-wipe {
   from {
     scale: 1 1;
+  }
+}
+
+@keyframes travel-cover {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes travel-in {
+  from {
+    opacity: 0;
+    scale: 0.7;
+  }
+}
+
+@keyframes travel-streak {
+  from {
+    opacity: 0;
+    transform: translateX(8vmax) scaleX(0.3);
+  }
+  35% {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(46vmax) scaleX(1);
+  }
+}
+
+@keyframes travel-spin {
+  to {
+    rotate: 360deg;
   }
 }
 

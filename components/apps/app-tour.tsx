@@ -102,7 +102,8 @@ export function AppTour() {
                     }`}
                   >
                     <h3 className="text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:text-[2.75rem] lg:text-[clamp(2.5rem,3.4vw,3.25rem)] lg:leading-[1.04]">
-                      {s.lead} <span className="text-white">{s.accent}</span>
+                      {s.lead}{" "}
+                      <span className="block text-white">{s.accent}</span>
                     </h3>
                     {/* On a phone the room goes to the phone in the hand. */}
                     <p className="mt-4 max-w-120 text-pretty text-lg leading-relaxed text-mist max-sm:hidden">
@@ -118,8 +119,7 @@ export function AppTour() {
             </div>
 
             <p className="mt-10 hidden max-w-80 border-t border-line pt-5 text-sm leading-relaxed text-silver lg:block">
-              TilomNov is still in development and will be released soon.
-              This is a look at a few of its screens, not the whole app.
+              In development. This is a first look.
             </p>
           </div>
 
@@ -169,7 +169,7 @@ export function AppTour() {
 
 /**
  * The tour's steps. Beside the phone on a wide screen they are a list of the
- * screens' names, each with a line that fills as its screen goes by;
+ * screens' names, each beside a line that fills as its screen goes by;
  * elsewhere there is only room for the lines, in a row.
  */
 function Steps({ stage, listed = false }: { stage: Stage; listed?: boolean }) {
@@ -218,13 +218,6 @@ function Steps({ stage, listed = false }: { stage: Stage; listed?: boolean }) {
                 }`}
               >
                 {s.tab}
-              </span>
-              <span
-                className={`block text-sm transition-colors duration-300 ${
-                  i === active ? "text-mist" : "text-silver/50"
-                }`}
-              >
-                {s.caption}
               </span>
             </span>
           )}

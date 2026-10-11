@@ -5,16 +5,16 @@ import { SpaceBackdrop } from "./space-backdrop/space-backdrop";
 
 const facts = [
   {
-    title: "Point-of-sale systems",
-    text: "Checkout, stock and reports in one place.",
+    title: "Point of sale",
+    text: "Checkout, stock and reports.",
   },
   {
     title: "Mobile apps",
-    text: "For iOS and Android, under your brand.",
+    text: "iOS and Android, under your brand.",
   },
   {
     title: "Setup and support",
-    text: "We install, train your staff and stay on call.",
+    text: "Installed, taught and on call.",
   },
 ];
 
@@ -43,9 +43,8 @@ export function Hero() {
             className="max-w-[14ch] text-balance font-display text-[clamp(2.75rem,min(12vw,14svh),4.5rem)] font-light leading-[0.98] tracking-[-0.035em] lg:max-w-[12ch] lg:text-[clamp(4.5rem,7vw,6.75rem)]"
           />
           <p className="mt-6 max-w-136 text-pretty text-lg leading-relaxed text-mist sm:mt-8 sm:text-xl">
-            SparkByte builds point-of-sale systems and mobile apps for shops,
-            cafés and restaurants. One team, from the checkout counter to your
-            customer&apos;s phone.
+            Point-of-sale systems and mobile apps for shops, cafés and
+            restaurants.
           </p>
           <div className="mt-8 flex flex-col items-start gap-6 sm:mt-10 sm:flex-row sm:items-center sm:gap-8">
             <Link

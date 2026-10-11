@@ -50,6 +50,7 @@ components/
   layout/
     site-header.tsx       Navigation bar and mobile menu
     site-footer.tsx       Footer: what we build, where to reach us
+    travel.tsx            The transition that carries a link to a far part of the page
     step-fill.tsx         The line of a step in a carousel's progress row
   hero/
     hero.tsx              The hero section

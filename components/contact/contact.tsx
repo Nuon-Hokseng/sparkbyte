@@ -8,11 +8,7 @@ const KINDS = ["Optician", "Retail or coffee", "Restaurant", "Something else"];
 const WANTS = ["POS system", "Mobile app"];
 
 // What happens once the message is sent. It is a sequence, so it is numbered.
-const NEXT = [
-  "You tell us about your business.",
-  "We get in touch to arrange a visit or a call.",
-  "You see a demo set up with your own products.",
-];
+const NEXT = ["You write.", "We call.", "You see it working."];
 
 const { email, phone, telegram } = site.contact;
 
@@ -87,7 +83,10 @@ export function Contact() {
         className="pointer-events-none absolute right-[-20%] top-[10%] size-[70vmax] rounded-full bg-[radial-gradient(closest-side,rgba(199,214,255,0.07),transparent)]"
       />
 
-      <div className="relative mx-auto grid w-full max-w-360 gap-y-12 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:gap-x-12 lg:px-16 lg:py-28">
+      {/* On a wide screen the section is as tall as the screen under the
+          header, with everything in the middle of it: arriving here shows
+          the whole form, down to its button. */}
+      <div className="relative mx-auto grid w-full max-w-360 gap-y-12 px-5 py-20 sm:px-8 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-12 lg:items-center lg:gap-x-12 lg:px-16 lg:py-8 short:lg:py-4">
         <div className="lg:col-span-5">
           <h2
             id="contact-title"
@@ -96,11 +95,11 @@ export function Contact() {
             Contact
           </h2>
           <p className="mt-4 text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:mt-6 sm:text-[2.75rem] lg:text-[clamp(2.75rem,3.9vw,3.75rem)] lg:leading-[1.02]">
-            Tell us how your shop runs.{" "}
-            <span className="text-white">We will show you what we would build.</span>
+            Tell us how you work.{" "}
+            <span className="block text-white">See it built for you.</span>
           </p>
 
-          <ol className="mt-8 max-w-104 lg:mt-12">
+          <ol className="mt-8 max-w-104 lg:mt-10">
             {NEXT.map((step, i) => (
               <li
                 key={step}
@@ -114,7 +113,7 @@ export function Contact() {
             ))}
           </ol>
 
-          <dl className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-12">
+          <dl className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-10">
             {CHANNELS.map((channel) => (
               <div key={channel.name}>
                 <dt className="text-sm text-silver">{channel.name}</dt>
@@ -139,29 +138,29 @@ export function Contact() {
 
         <form
           onSubmit={submit}
-          className="rounded-3xl bg-white/5 p-5 ring-1 ring-white/12 sm:p-8 lg:col-span-7 lg:col-start-6"
+          className="rounded-3xl bg-white/5 p-5 ring-1 ring-white/12 sm:p-8 lg:col-span-7 lg:col-start-6 short:lg:p-6"
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block text-sm text-mist">
-              Your name
+              Name
               <input
                 name="name"
                 required
                 autoComplete="name"
-                className={`h-12 ${FIELD}`}
+                className={`h-12 short:lg:h-11 ${FIELD}`}
               />
             </label>
             <label className="block text-sm text-mist">
-              Business name
+              Business
               <input
                 name="business"
                 autoComplete="organization"
-                className={`h-12 ${FIELD}`}
+                className={`h-12 short:lg:h-11 ${FIELD}`}
               />
             </label>
           </div>
 
-          <fieldset className="mt-6">
+          <fieldset className="mt-5">
             <legend className="text-sm text-mist">Kind of business</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {KINDS.map((kind) => (
@@ -178,8 +177,8 @@ export function Contact() {
             </div>
           </fieldset>
 
-          <fieldset className="mt-6">
-            <legend className="text-sm text-mist">What you are after</legend>
+          <fieldset className="mt-5">
+            <legend className="text-sm text-mist">Interested in</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {WANTS.map((want) => (
                 <label key={want} className={CHIP}>
@@ -195,28 +194,28 @@ export function Contact() {
             </div>
           </fieldset>
 
-          <label className="mt-6 block text-sm text-mist">
-            Phone or Telegram, so we can reach you
+          <label className="mt-5 block text-sm text-mist">
+            Phone or Telegram
             <input
               name="reach"
               required
               autoComplete="tel"
               inputMode="text"
-              className={`h-12 ${FIELD}`}
+              className={`h-12 short:lg:h-11 ${FIELD}`}
             />
           </label>
 
-          <label className="mt-6 block text-sm text-mist">
-            Anything we should know
+          <label className="mt-5 block text-sm text-mist">
+            Message
             <textarea
               name="note"
-              rows={4}
-              placeholder="How many shops, what you use today, what gets in your way…"
+              rows={3}
+              placeholder="Optional"
               className={`resize-y py-3 leading-relaxed ${FIELD}`}
             />
           </label>
 
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6 short:lg:mt-5">
             <button
               type="submit"
               className="inline-flex h-14 shrink-0 items-center justify-center rounded-full bg-white px-8 text-base font-semibold text-ink transition-colors hover:bg-mist"
@@ -224,8 +223,7 @@ export function Contact() {
               Book a demo
             </button>
             <p className="text-sm leading-snug text-silver">
-              This opens your email app with the message written out, ready to
-              send.
+              Opens your email app, ready to send.
             </p>
           </div>
 
@@ -233,8 +231,7 @@ export function Contact() {
             {sent && (
               <div className="mt-6 animate-[mock-in_0.35s_ease-out] rounded-2xl bg-white/5 p-5 ring-1 ring-white/12 motion-reduce:animate-none">
                 <p className="text-[0.9375rem] leading-relaxed text-mist">
-                  Your email app should have opened with the message. If it
-                  did not, copy the message and send it to{" "}
+                  Email app did not open? Copy the message and send it to{" "}
                   <a
                     href={`mailto:${email}`}
                     className="border-b border-silver/60 font-medium text-white"
@@ -252,8 +249,7 @@ export function Contact() {
                 </button>
                 {copied === "no" && (
                   <label className="mt-4 block text-sm text-mist">
-                    Your browser did not allow the copy. Here is the message
-                    to select and copy yourself.
+                    Copy was blocked. Select the message here.
                     <textarea
                       readOnly
                       rows={6}

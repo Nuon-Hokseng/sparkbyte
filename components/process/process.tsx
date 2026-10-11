@@ -68,9 +68,8 @@ export function Process() {
             <span className="text-white sm:block">We build around it.</span>
           </p>
           <p className="mt-4 max-w-120 text-pretty text-sm leading-relaxed text-mist sm:text-lg">
-            Everything we make starts from how a business really runs, and
-            goes through the same four steps. Each stone in orbit is one of
-            those things: {made} made so far, {STONES.length - made} still dark.
+            Each stone is something we build. {made} made, {STONES.length - made} to
+            come.
           </p>
         </div>
 
@@ -89,7 +88,7 @@ export function Process() {
               }`}
             >
               <Pointer />
-              Try it: drag the ring, or click a stone
+              Drag the ring. Click a stone.
             </p>
             {STONES.map((s, i) => (
               <div
@@ -144,7 +143,7 @@ export function Process() {
           <p className="text-sm text-silver sm:text-[0.9375rem]">
             {stone
               ? `${stone.name}: ${progress(stone.done)}.`
-              : "The same four steps, every time."}
+              : "Four steps. Every time."}
           </p>
           <ol className="mt-3">
             {STEPS.map((step, i) => {

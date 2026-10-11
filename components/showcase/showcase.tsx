@@ -83,7 +83,7 @@ export function Showcase() {
               the page has scrolled. It sits above whichever side the text is
               on. */}
           <div
-            className={`row-start-1 flex items-center gap-3 sm:gap-4 lg:col-span-5 ${textSide}`}
+            className={`row-start-1 flex items-center gap-3 sm:gap-4 lg:col-span-5 lg:self-end ${textSide}`}
           >
             <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white/5 ring-1 ring-white/12 sm:size-12 sm:rounded-2xl">
               <svg
@@ -152,31 +152,13 @@ export function Showcase() {
                 {/* Set like the hero's headline; the opening half is dimmed
                     so the second carries it. */}
                 <h3 className="text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:text-[2.75rem] lg:text-[clamp(2.75rem,3.9vw,3.75rem)] lg:leading-[1.02]">
-                  {s.lead} <span className="text-white">{s.accent}</span>
+                  {s.lead} <span className="block text-white">{s.accent}</span>
                 </h3>
-                <p className="mt-2 max-w-120 text-pretty text-sm leading-relaxed text-mist sm:mt-4 sm:text-lg">
+                <p className="mt-3 max-w-104 text-pretty text-base leading-relaxed text-mist sm:mt-5 sm:text-xl">
                   {s.body}
                 </p>
-                <dl className="mt-8 hidden grid-cols-3 xl:grid">
-                  {s.points.map(([name, text], p) => (
-                    <div
-                      key={name}
-                      className={
-                        p ? "border-l border-line pl-4 pr-2" : "pr-2"
-                      }
-                    >
-                      <dt className="flex items-center gap-1.5 text-[0.9375rem] font-medium">
-                        <Tick />
-                        {name}
-                      </dt>
-                      <dd className="mt-1 text-sm leading-snug text-silver">
-                        {text}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
                 {/* A line of text on a phone, a pill from there up. */}
-                <p className="mt-2 flex w-fit items-center gap-2 text-sm font-medium sm:mt-6 sm:h-11 sm:rounded-full sm:bg-white/5 sm:px-5 sm:text-[0.9375rem] sm:ring-1 sm:ring-white/15 xl:mt-8">
+                <p className="mt-2 flex w-fit items-center gap-2 text-sm font-medium sm:mt-6 sm:h-11 sm:rounded-full sm:bg-white/5 sm:px-5 sm:text-[0.9375rem] sm:ring-1 sm:ring-white/15">
                   <Pointer />
                   {s.hint}
                 </p>
@@ -205,26 +187,6 @@ export function Showcase() {
         </div>
       </div>
     </section>
-  );
-}
-
-function Tick() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-      className="size-4 shrink-0 text-silver"
-    >
-      <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.3" />
-      <path
-        d="M5.4 8.2l1.8 1.8 3.4-3.7"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 

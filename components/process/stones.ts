@@ -5,19 +5,19 @@
 export const STEPS: { name: string; text: string }[] = [
   {
     name: "Listen",
-    text: "We come to your shop and watch a working day before we suggest anything.",
+    text: "We watch a working day first.",
   },
   {
     name: "Shape",
-    text: "You get the screens as a mock you can click through, and change them until they fit.",
+    text: "You try the screens before we build.",
   },
   {
     name: "Build",
-    text: "We release it in parts, so you are using the first while we finish the rest.",
+    text: "Released in parts, so you start early.",
   },
   {
     name: "Stay",
-    text: "We install it, train your staff and stay on call long after launch.",
+    text: "Installed, taught and on call.",
   },
 ];
 
@@ -42,7 +42,7 @@ const dark = (n: number, color: Colors): Stone => ({
   id: `dark-${n}`,
   name: "Not made yet",
   status: "Waiting",
-  text: "This stone is still dark. Tell us what your business needs, and it could be the next one we light.",
+  text: "Still dark. The next one could be yours.",
   done: 0,
   link: { href: "/#contact", label: "Book a demo" },
   color,
@@ -58,7 +58,7 @@ export const STONES: Stone[] = [
     id: "pos",
     name: "SparkByte POS",
     status: "Made",
-    text: "Our first stone: a point of sale that a shop sets up for itself, with its own data and an assistant to ask about it.",
+    text: "A point of sale that shops set up themselves.",
     done: 4,
     link: { href: "/#pos", label: "See the POS" },
     color: ["#ffb3b9", "#f0152f", "#5c000d"],
@@ -70,7 +70,7 @@ export const STONES: Stone[] = [
     id: "tilomnov",
     name: "TilomNov",
     status: "Release soon",
-    text: "Our second stone: a property app for Cambodia, with the map, the chat and the listings in place and the last stretch under way.",
+    text: "A property app for Cambodia. Nearly there.",
     done: 2,
     link: { href: "/#apps", label: "See the app" },
     color: ["#b5dbff", "#1f6bff", "#081a5e"],
