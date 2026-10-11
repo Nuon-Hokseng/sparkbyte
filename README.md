@@ -184,13 +184,36 @@ through Openverse:
 The map and the three property photos in `public/apps/` are cut from the
 TilomNov app's own design screens.
 
+## Search engines
+
+Everything search engines are told comes from `lib/site.ts`: the title, the
+description, the address, and our pages elsewhere (`profiles`).
+
+- `app/layout.tsx` writes the page's title, description, canonical link and
+  share cards.
+- `components/layout/structured-data.tsx` says, in schema.org terms, that
+  this is the official site of the organisation SparkByte.
+- `app/robots.ts` and `app/sitemap.ts` write `/robots.txt` and `/sitemap.xml`.
+
+Set these in the host's environment:
+
+| Variable | What it is |
+| -------- | ---------- |
+| `NEXT_PUBLIC_SITE_URL` | The site's real address, e.g. `https://sparkbyte.com`. Without it the build uses Vercel's address for the project, or warns that it has none. |
+| `GOOGLE_SITE_VERIFICATION` | The code Google Search Console gives for the "HTML tag" method. |
+| `BING_SITE_VERIFICATION` | The same, from Bing Webmaster Tools. |
+
+Then, once, by hand: add the site in Google Search Console, verify it, submit
+`/sitemap.xml` and ask for the home page to be indexed. Add the addresses of
+our Facebook, Telegram and other pages to `profiles`, and link to the site
+from each of them.
+
 ## Before launch
 
-- Set `NEXT_PUBLIC_SITE_URL`.
+- Set `NEXT_PUBLIC_SITE_URL` to the site's real address (see Search engines).
 - Check the map in `public/apps/map.webp` may be shown publicly: it is a
   screenshot of the app's map provider, labels and all.
-- Write a real description in `lib/site.ts`, and put the real contact details
-  there: the email address is a placeholder that cannot receive mail, and the
+- Put the real contact details in `lib/site.ts`: the email address is a placeholder that cannot receive mail, and the
   phone number and Telegram name are empty, so the site leaves them out.
 - Replace the placeholder copy in `components/hero/hero.tsx`,
   `components/showcase/slides.ts`, `components/apps/tour.ts`,

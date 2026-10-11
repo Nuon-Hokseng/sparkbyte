@@ -6,6 +6,7 @@ import {
   Kantumruy_Pro,
   Poppins,
 } from "next/font/google";
+import { StructuredData } from "@/components/layout/structured-data";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -47,37 +48,57 @@ const khmer = Kantumruy_Pro({
   preload: false,
 });
 
+// The codes search engines give out to prove a site is ours, each set in the
+// environment once it has been issued (see the README).
+const verification = {
+  google: process.env.GOOGLE_SITE_VERIFICATION,
+  other: process.env.BING_SITE_VERIFICATION
+    ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+    : undefined,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: site.name,
+    default: site.title,
     template: `%s | ${site.name}`,
   },
   description: site.description,
   applicationName: site.name,
-  keywords: [site.name],
-  authors: [{ name: site.name }],
+  keywords: [...site.keywords],
+  authors: [{ name: site.name, url: site.url }],
   creator: site.name,
+  publisher: site.name,
+  category: "technology",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     siteName: site.name,
-    title: site.name,
+    title: site.title,
     description: site.description,
     url: "/",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: site.name,
+    title: site.title,
     description: site.description,
   },
+  // Index everything, and let results show the full snippet and a large image.
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
   },
+  verification,
   appleWebApp: {
     capable: true,
     title: site.name,
@@ -100,7 +121,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${display.variable} ${sans.variable} ${pos.variable} ${app.variable} ${khmer.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <StructuredData />
+        {children}
+      </body>
     </html>
   );
 }
