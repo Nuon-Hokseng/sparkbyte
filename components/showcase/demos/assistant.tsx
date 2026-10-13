@@ -209,7 +209,7 @@ export function Assistant({ play, settled }: DemoProps) {
 
         <div
           ref={list}
-          className="stage-list flex min-h-0 flex-1 flex-col gap-[0.7em] overflow-y-auto px-[1em] py-[1em]"
+          className="flex min-h-0 flex-1 flex-col gap-[0.7em] overflow-y-auto px-[1em] py-[1em]"
         >
           {messages.map((message, i) =>
             message.from === "me" ? (

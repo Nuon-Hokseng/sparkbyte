@@ -90,41 +90,12 @@ html[data-menu-open] canvas[data-bh-canvas] {
 }
 
 /* ── The carousels' stages ─────────────────────────────────────────────────
-   See hooks/use-scroll-stage.ts. With a mouse the section is a screen for the
-   stage plus --slide-len of scrolling for each of its --slides. On a touch
-   screen it is the one screen, and a swipe moves a slide. */
+   See hooks/use-scroll-stage.ts. The section is a screen for the stage plus
+   --slide-len of scrolling for each of its --slides, on every kind of screen.
+   The stage sticks while the page scrolls through that, and nothing on it
+   takes the scroll away from the page: no touch-action, no overscroll lock. */
 .stage-section {
   height: calc(100svh + var(--slides) * var(--slide-len));
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .stage-section {
-    height: 100svh;
-  }
-}
-
-/* Once the stage is reading swipes, a finger moving up or down it must not
-   scroll the page as well. Every element says so for itself, because one that
-   clips or scrolls its contents does not pass the rule on to them. A list on
-   the stage that scrolls up and down (`stage-list`) is the exception, with
-   all that is in it. These are in the base layer so that a utility still
-   wins: `touch-none`, on what is dragged. */
-@layer base {
-  [data-paged],
-  [data-paged] * {
-    touch-action: pan-x pinch-zoom;
-  }
-
-  [data-paged] .stage-list,
-  [data-paged] .stage-list * {
-    touch-action: pan-x pan-y pinch-zoom;
-  }
-}
-
-/* Such a list keeps its scrolling to itself: reaching its end does not start
-   the page scrolling instead. */
-.stage-list {
-  overscroll-behavior: contain;
 }
 
 /* What the stage tells its parts about the scroll. Neither is inherited, so
@@ -317,10 +288,9 @@ html[data-menu-open] canvas[data-bh-canvas] {
    wall-in: a wall being drawn along its length, from --wall-from. app-in: the
    app moving to another screen. photo-in: the next photo of a gallery.
    typing: a dot of the "is typing" bubble. hand-float: the hand, never quite
-   still. ring-out: a ring of the backdrop pulsing outwards. fill-x, fill-y: a
-   step's line filling while its slide is up, on a touch screen. chart-wipe:
-   the cover over a line chart drawing aside, so the chart is drawn from left
-   to right. bar-in: a bar of a chart growing from the axis. stone-glow: the
+   still. ring-out: a ring of the backdrop pulsing outwards. chart-wipe: the
+   cover over a line chart drawing aside, so the chart is drawn from left to
+   right. bar-in: a bar of a chart growing from the axis. stone-glow: the
    light of a stone in "How we work", swelling and fading. travel-cover: the
    dark spreading over the page on the way to a distant part of it.
    travel-in: the mark arriving in the middle of that dark. travel-streak: a
@@ -428,24 +398,6 @@ html[data-menu-open] canvas[data-bh-canvas] {
 @keyframes bar-in {
   from {
     scale: 0 1;
-  }
-}
-
-@keyframes fill-x {
-  from {
-    scale: 0 1;
-  }
-  to {
-    scale: 1 1;
-  }
-}
-
-@keyframes fill-y {
-  from {
-    scale: 1 0;
-  }
-  to {
-    scale: 1 1;
   }
 }
 

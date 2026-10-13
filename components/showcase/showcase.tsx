@@ -12,16 +12,14 @@ import { TableSizes } from "./demos/table-sizes";
 import { Tabs } from "./demos/tabs";
 import { Paper } from "./paper";
 import { slides, type SlideId } from "./slides";
+import { slideText } from "@/components/layout/slide-text";
 import { StepFill } from "@/components/layout/step-fill";
 import { useScrollStage } from "@/hooks/use-scroll-stage";
 
 const COUNT = slides.length;
 // How much scrolling moves the carousel on by one slide, in svh. Short, so
 // the whole set passes in under two screens.
-const STEP = 28;
-// On a touch screen, how long a slide stays up before the next comes by
-// itself, in ms: long enough for its demo to finish showing itself off.
-const DWELL = 7000;
+const STEP = 20;
 
 const demos: Record<SlideId, ComponentType<DemoProps>> = {
   type: BusinessType,
@@ -44,11 +42,11 @@ const SIDES = [
 const two = (n: number) => String(n).padStart(2, "0");
 
 /**
- * A carousel on a stage (see `useScrollStage`). With a mouse it is driven by
- * scrolling: the stage sticks to the viewport while the page scrolls through
- * the section. On a touch screen a swipe moves one slide, and the slides
- * change by themselves if left alone. Either way a slide plays again each
- * time it returns.
+ * A carousel on a stage (see `useScrollStage`). It is driven by scrolling: the
+ * stage sticks to the viewport while the page scrolls through the section,
+ * and the slides go by one after another; when the last is done the page
+ * carries on. The scroll itself is the page's own, never held or redirected.
+ * A slide plays again each time it returns.
  *
  * Each slide brings its own text and its own live demo: a piece of the POS
  * that shows itself off, then is the visitor's to try. Progress is always on
@@ -56,8 +54,8 @@ const two = (n: number) => String(n).padStart(2, "0");
  * the demo easing past.
  */
 export function Showcase() {
-  const stage = useScrollStage(COUNT, DWELL);
-  const { sectionRef, stageRef, active, onStage, reduced, goTo } = stage;
+  const { sectionRef, stageRef, active, onStage, reduced, goTo } =
+    useScrollStage(COUNT);
 
   const slide = slides[active];
   const Demo = demos[slide.id];
@@ -126,7 +124,7 @@ export function Showcase() {
                       i === active ? "w-10" : "w-3.5"
                     }`}
                   >
-                    <StepFill index={i} stage={stage} />
+                    <StepFill index={i} />
                   </span>
                 </button>
               ))}
@@ -139,26 +137,24 @@ export function Showcase() {
             return (
               <div
                 key={s.id}
-                className={`col-start-1 row-start-2 transition-[opacity,transform] duration-500 motion-reduce:transition-none lg:col-span-5 ${
-                  SIDES[i % 2][0]
-                } ${
-                  state === "active"
-                    ? "delay-150"
-                    : `pointer-events-none opacity-0 ${
-                        state === "past" ? "-translate-y-6" : "translate-y-6"
-                      }`
-                }`}
+                className={`col-start-1 row-start-2 lg:col-span-5 ${SIDES[i % 2][0]}`}
               >
                 {/* Set like the hero's headline; the opening half is dimmed
                     so the second carries it. */}
-                <h3 className="text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:text-[2.75rem] lg:text-[clamp(2.75rem,3.9vw,3.75rem)] lg:leading-[1.02]">
+                <h3
+                  className={`${slideText(state, 0)} text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:text-[2.75rem] lg:text-[clamp(2.75rem,3.9vw,3.75rem)] lg:leading-[1.02]`}
+                >
                   {s.lead} <span className="block text-white">{s.accent}</span>
                 </h3>
-                <p className="mt-3 max-w-104 text-pretty text-base leading-relaxed text-mist sm:mt-5 sm:text-xl">
+                <p
+                  className={`${slideText(state, 1)} mt-3 max-w-104 text-pretty text-base leading-relaxed text-mist sm:mt-5 sm:text-xl`}
+                >
                   {s.body}
                 </p>
                 {/* A line of text on a phone, a pill from there up. */}
-                <p className="mt-2 flex w-fit items-center gap-2 text-sm font-medium sm:mt-6 sm:h-11 sm:rounded-full sm:bg-white/5 sm:px-5 sm:text-[0.9375rem] sm:ring-1 sm:ring-white/15">
+                <p
+                  className={`${slideText(state, 2)} mt-2 flex w-fit items-center gap-2 text-sm font-medium sm:mt-6 sm:h-11 sm:rounded-full sm:bg-white/5 sm:px-5 sm:text-[0.9375rem] sm:ring-1 sm:ring-white/15`}
+                >
                   <Pointer />
                   {s.hint}
                 </p>

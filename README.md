@@ -99,8 +99,8 @@ components/
 
 hooks/
   use-reduced-motion.ts
-  use-scroll-stage.ts     What drives both carousels: scrolling with a mouse; on a
-                          touch screen a swipe per slide, and a timer
+  use-scroll-stage.ts     What drives both carousels: the page's own scroll
+                          through a stage that sticks while it goes by
   use-script.ts           Timed opening moves for a demo or a screen
 
 lib/

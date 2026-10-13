@@ -160,7 +160,7 @@ export function TableSizes({ play }: DemoProps) {
         ))}
       </div>
 
-      <div className="mt-[0.9em] grid min-h-0 flex-1 grid-cols-4 content-start gap-[0.8em] stage-list overflow-y-auto @max-xl:grid-cols-3 @max-xl:gap-[0.6em]">
+      <div className="mt-[0.9em] grid min-h-0 flex-1 grid-cols-4 content-start gap-[0.8em] overflow-y-auto @max-xl:grid-cols-3 @max-xl:gap-[0.6em]">
         {here.length === 0 && (
           <p className="col-span-full py-[2em] text-center text-[0.9em] text-mock-mute">
             No tables on this floor yet. Choose a size and add some.

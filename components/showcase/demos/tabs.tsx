@@ -75,7 +75,7 @@ export function Tabs({ play, settled }: DemoProps) {
         </div>
 
         <p className={`mt-[1.1em] @max-xl:mt-[0.9em] ${GROUP}`}>Custom</p>
-        <ul className="mt-[0.5em] flex max-h-[8.4em] flex-col gap-[0.5em] stage-list overflow-y-auto @max-xl:max-h-[5.4em]">
+        <ul className="mt-[0.5em] flex max-h-[8.4em] flex-col gap-[0.5em] overflow-y-auto @max-xl:max-h-[5.4em]">
           {custom.length === 0 && (
             <li className="py-[0.5em] text-[0.88em] italic leading-none text-mock-mute">
               No custom categories yet.
@@ -141,7 +141,7 @@ export function Tabs({ play, settled }: DemoProps) {
         </div>
         <NavRow label="Receipt" className="@max-xl:hidden" />
         <NavRow label="Products" on className="@max-xl:bg-transparent @max-xl:p-0" />
-        <div className="ml-[1.1em] flex min-h-0 flex-col stage-list overflow-y-auto border-l border-mock-line pl-[0.9em] @max-xl:ml-0 @max-xl:mt-[0.7em] @max-xl:max-h-[7.4em] @max-xl:flex-row @max-xl:flex-wrap @max-xl:content-start @max-xl:gap-[0.5em] @max-xl:border-0 @max-xl:pl-0">
+        <div className="ml-[1.1em] flex min-h-0 flex-col overflow-y-auto border-l border-mock-line pl-[0.9em] @max-xl:ml-0 @max-xl:mt-[0.7em] @max-xl:max-h-[7.4em] @max-xl:flex-row @max-xl:flex-wrap @max-xl:content-start @max-xl:gap-[0.5em] @max-xl:border-0 @max-xl:pl-0">
           {BUILT_IN.map((name) => (
             <span
               key={name}

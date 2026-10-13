@@ -54,7 +54,7 @@ export function Explore({ play, go }: ScreenProps) {
         ref={list}
         onPointerDown={stop}
         onWheel={stop}
-        className="absolute inset-x-0 bottom-[9.6em] top-[14.7em] stage-list overflow-y-auto bg-mock-fog px-[1.6em] pb-[6em] scrollbar-none pt-[1.2em]"
+        className="absolute inset-x-0 bottom-[9.6em] top-[14.7em] overflow-y-auto bg-mock-fog px-[1.6em] pb-[6em] scrollbar-none pt-[1.2em]"
       >
         {order.map((listing, i) => (
           <ListingCard

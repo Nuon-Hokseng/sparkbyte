@@ -129,7 +129,7 @@ export function TableOrder({ play, settled }: DemoProps) {
           </span>
         </div>
 
-        <ul className="mt-[0.9em] min-h-0 flex-1 stage-list overflow-y-auto @max-xl:hidden">
+        <ul className="mt-[0.9em] min-h-0 flex-1 overflow-y-auto @max-xl:hidden">
           {!paid &&
             lines.map(([dish, qty]) => (
               <li

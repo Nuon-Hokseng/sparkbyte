@@ -11,15 +11,13 @@ import { Explore } from "./screens/explore";
 import { MapScreen } from "./screens/map";
 import { Welcome } from "./screens/welcome";
 import { tour, type TourId } from "./tour";
+import { slideText } from "@/components/layout/slide-text";
 import { StepFill } from "@/components/layout/step-fill";
 import { useScrollStage } from "@/hooks/use-scroll-stage";
 
 const COUNT = tour.length;
 // How much scrolling moves the tour on by one screen, in svh.
-const STEP = 30;
-// On a touch screen, how long a screen stays up before the next comes by
-// itself, in ms.
-const DWELL = 7000;
+const STEP = 24;
 
 type Stage = ReturnType<typeof useScrollStage>;
 
@@ -40,7 +38,7 @@ const two = (n: number) => String(n).padStart(2, "0");
  * app: its tabs, its cards and its back buttons move the tour too.
  */
 export function AppTour() {
-  const stage = useScrollStage(COUNT, DWELL);
+  const stage = useScrollStage(COUNT);
   const { sectionRef, stageRef, active, onStage, reduced, goTo } = stage;
 
   // How many times the visitor has pressed the phone's screen. The hand
@@ -91,25 +89,22 @@ export function AppTour() {
                 const state =
                   i === active ? "active" : i < active ? "past" : "next";
                 return (
-                  <div
-                    key={s.id}
-                    className={`col-start-1 row-start-1 transition-[opacity,transform] duration-500 motion-reduce:transition-none ${
-                      state === "active"
-                        ? "delay-150"
-                        : `pointer-events-none opacity-0 ${
-                            state === "past" ? "-translate-y-6" : "translate-y-6"
-                          }`
-                    }`}
-                  >
-                    <h3 className="text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:text-[2.75rem] lg:text-[clamp(2.5rem,3.4vw,3.25rem)] lg:leading-[1.04]">
+                  <div key={s.id} className="col-start-1 row-start-1">
+                    <h3
+                      className={`${slideText(state, 0)} text-balance font-display text-[1.75rem] font-light leading-[1.06] tracking-[-0.035em] text-silver sm:text-[2.75rem] lg:text-[clamp(2.5rem,3.4vw,3.25rem)] lg:leading-[1.04]`}
+                    >
                       {s.lead}{" "}
                       <span className="block text-white">{s.accent}</span>
                     </h3>
                     {/* On a phone the room goes to the phone in the hand. */}
-                    <p className="mt-4 max-w-120 text-pretty text-lg leading-relaxed text-mist max-sm:hidden">
+                    <p
+                      className={`${slideText(state, 1)} mt-4 max-w-120 text-pretty text-lg leading-relaxed text-mist max-sm:hidden`}
+                    >
                       {s.body}
                     </p>
-                    <p className="mt-2 flex w-fit items-center gap-2 text-sm font-medium sm:mt-6 sm:h-11 sm:rounded-full sm:bg-white/5 sm:px-5 sm:text-[0.9375rem] sm:ring-1 sm:ring-white/15">
+                    <p
+                      className={`${slideText(state, 2)} mt-2 flex w-fit items-center gap-2 text-sm font-medium sm:mt-6 sm:h-11 sm:rounded-full sm:bg-white/5 sm:px-5 sm:text-[0.9375rem] sm:ring-1 sm:ring-white/15`}
+                    >
                       <Pointer />
                       {s.hint}
                     </p>
@@ -203,7 +198,7 @@ function Steps({ stage, listed = false }: { stage: Stage; listed?: boolean }) {
                   }`
             }`}
           >
-            <StepFill index={i} stage={stage} vertical={listed} />
+            <StepFill index={i} vertical={listed} />
           </span>
           {listed && (
             <span className="block py-3.5">
